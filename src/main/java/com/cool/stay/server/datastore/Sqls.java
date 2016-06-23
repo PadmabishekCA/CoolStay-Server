@@ -16,6 +16,11 @@ public final class Sqls {
 	public static final String getOrderInfoOfUser = "select t1.name as username, t2.name as cuisinename, t3.amount as totalamount , t3.update_time as date from user_table t1,t_mst_cuisine t2,t_dtl_cuisine t3 where t1.name=? and t1.id=t3.userId and t3.cuisineId = t2.id ";
 	
 	
+	
+	public static final String checkGameStatus="select id,Intreval from t_mst_slot where id not in (select slotId from t_dtl_slot where gameName=? and slotdate =?)";
+	public static final String bookGameSlot="insert into t_dtl_slot(slotId,gameName,userName,slotdate) values(?,?,?,?)";
+	public static final String slotBookingStatusOfUser="select t1.Intreval as intreval, t2.gameName as gamename , t2.slotdate as bookeddate from t_mst_slot t1,t_dtl_slot t2 where t1.id=t2.slotId and t2.userName =?";
+	
 	public static final String getGamess = "select *from t_mst_games";
 	public static final String addGames = "insert into games values (null, ?, ?, ?)";
 	public static final String deleteGames = "delete from games where description = ?";

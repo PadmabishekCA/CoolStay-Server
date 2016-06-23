@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.cool.stay.server.dto.CuisineOrder;
+import com.cool.stay.server.dto.GamesBooking;
+import com.cool.stay.server.dto.GamesSlotDetail;
 import com.cool.stay.server.dto.OrderDetail;
 
 public class ConnectionManager {
@@ -39,6 +41,17 @@ public class ConnectionManager {
 		rs =confirmEmp.executeQuery();
 		return rs;
 	}
+	
+	public ResultSet executeQuery(String sql, GamesBooking bookingInfo) throws SQLException, ClassNotFoundException {
+		ResultSet rs=null;
+		System.out.println("Booking date : "+bookingInfo.getBookingDate());
+		System.out.println("Game Name : "+bookingInfo.getGameName());
+		PreparedStatement checkSlot = getConnection().prepareStatement(sql);
+		checkSlot.setString(1, bookingInfo.getGameName());
+		checkSlot.setDate(2, bookingInfo.getBookingDate());
+		rs=checkSlot.executeQuery();
+		return rs;
+	}
 	public ResultSet executeQuery(String sql,CuisineOrder c) throws SQLException, ClassNotFoundException {
 		ResultSet rs=null;
 		PreparedStatement confirmEmp = getConnection().prepareStatement(sql);
@@ -48,6 +61,18 @@ public class ConnectionManager {
 		rs =confirmEmp.executeQuery();
 		return rs;
 	}
+	public int executeUpdate (String sql , GamesSlotDetail slot)throws SQLException, ClassNotFoundException {
+		int rs=0;
+		PreparedStatement bookSlot = getConnection().prepareStatement(sql);
+		bookSlot.setInt(1, slot.getSlotId());
+		bookSlot.setString(2, slot.getGameName());
+		bookSlot.setString(3, slot.getUserName());
+		bookSlot.setDate(4, slot.getBookingDate());
+		rs=bookSlot.executeUpdate();
+		return rs;
+	}
+	
+	
 	
 	public int executeUpdate(String sql, OrderDetail o,CuisineOrder l) throws ClassNotFoundException, SQLException {
 		System.out.println("Inside Connection manager");

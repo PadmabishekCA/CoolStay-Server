@@ -1,89 +1,55 @@
 package com.cool.stay.server.dto;
 
+
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Map;
+
 public class GamesBooking {
-	private String id;
-	private String gamesId;
-	private String userId;
-	private String slotId;
-	private String updateDate;
-	private String description;
-	private String username;
-	private String saved;
-
-	public GamesBooking(String id, String gamesId, String userId, String slotId, String updateDate, String description,
-			String username, String saved) {
-		this.id = id;
-		this.gamesId = gamesId;
-		this.userId = userId;
-		this.slotId = slotId;
-		this.updateDate = updateDate;
-		this.description = description;
-		this.username = username;
-		this.saved = saved;
+	private String userName;
+	private Date bookingDate;
+	private String gameName;
+	
+	public GamesBooking(String userName,Date bookingDate,String gameName){
+		this.userName=userName;
+		this.bookingDate=bookingDate;
+		this.gameName=gameName;
 	}
-
-	public String getId() {
-		return id;
+	
+	public GamesBooking(Map checkingSlot){
+		this.userName=checkingSlot.get("nameOfUserBooking").toString();
+		this.gameName=checkingSlot.get("gamesName").toString();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        java.util.Date date=null;
+		try {
+			date = sdf.parse(checkingSlot.get("gamesDate").toString());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+       System.out.println("Date in constructor"+date);
+        java.sql.Date sqlDate = new Date(date.getTime());
+        System.out.println("date in sql formatted form "+sqlDate);
+        this.bookingDate=sqlDate;
 	}
-
-	public void setId(String id) {
-		this.id = id;
+	
+	public String getUserName() {
+		return userName;
 	}
-
-	public String getGamesId() {
-		return gamesId;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-
-	public void setGamesId(String gamesId) {
-		this.gamesId = gamesId;
+	public Date getBookingDate() {
+		return bookingDate;
 	}
-
-	public String getUserId() {
-		return userId;
+	public void setBookingDate(Date bookingDate) {
+		this.bookingDate = bookingDate;
 	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public String getGameName() {
+		return gameName;
 	}
-
-	public String getSlotId() {
-		return slotId;
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
 	}
-
-	public void setSlotId(String slotId) {
-		this.slotId = slotId;
-	}
-
-	public String getUpdateDate() {
-		return updateDate;
-	}
-
-	public void setUpdateDate(String updateDate) {
-		this.updateDate = updateDate;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getSaved() {
-		return saved;
-	}
-
-	public void setSaved(String saved) {
-		this.saved = saved;
-	}
-
+	
 }

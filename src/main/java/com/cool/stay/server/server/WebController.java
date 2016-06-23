@@ -5,6 +5,7 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.SparkBase.port;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -207,20 +208,78 @@ public class WebController {
 			}
 			return Utils.convertMapToJson(map);
 		});
-
+		
+		post("/checkSlot", (req, res) -> {
+			System.out.println("Request for checking slot" + req.body());
+			JSONObject jObject = new JSONObject(req.body());
+			JSONArray jarray= jObject.getJSONArray("classroom");
+			System.out.println("Request: Create jarray " + jarray);
+			Map ob = new HashMap();
+			Iterator it =jarray.iterator();
+			while(it.hasNext())	
+			{
+				JSONObject jObjectit = (JSONObject)it.next();
+				Iterator<?> keys = jObjectit.keys();
+				String keyName = null;
+				while (keys.hasNext()) {
+					String key = (String) keys.next();
+					String value = jObjectit.getString(key);
+					if(key.equalsIgnoreCase("name"))
+						keyName = value;
+					else if(key.equalsIgnoreCase("value")) 
+						ob.put(keyName, value);
+					System.out.println("Key : "+key + " value :"+ value);
+				}
+				System.out.println("Map obkect  :"+ ob.toString());
+				
+			}
+			GamesBookingDAOImpl checkSlot = new GamesBookingDAOImpl();
+			Map resMap=checkSlot.checkGamesSlot(ob);
+			System.out.println("Result of slotCheck"+ Utils.convertMapToJson(resMap));
+			return Utils.convertMapToJson(resMap);
+			})	;
 		// ********************************************************
 		// Games booking specific queries
 		// ********************************************************
 		post("/createGamesBooking", (req, res) -> {
 			System.out.println("Request: Create games booking " + req.body());
-			Map<String, Object> map = Utils.convertJsonToMap(req.body());
-			(new GamesBookingDAOImpl()).addGamesBooking(new GamesBooking(null, map.get("games_id").toString(),
-					map.get("userid").toString(), map.get("slotid").toString(), map.get("update_date").toString(),
-					map.get("description").toString(), map.get("username").toString(), map.get("saved").toString()));
-			return "Cuisine Created";
+			JSONObject jObject = new JSONObject(req.body());
+			JSONArray jarray= jObject.getJSONArray("classroom");
+			System.out.println("Request: Create jarray " + jarray);
+			Map ob = new HashMap();
+			List lst = new ArrayList();
+			Iterator it =jarray.iterator();
+			while(it.hasNext())	
+			{
+				JSONObject jObjectit = (JSONObject)it.next();
+				Iterator<?> keys = jObjectit.keys();
+				String keyName = null;
+				while (keys.hasNext()) {
+					String key = (String) keys.next();
+					String value = jObjectit.getString(key);
+					if(key.equalsIgnoreCase("name"))
+						keyName = value;
+					else if(key.equalsIgnoreCase("value")) {
+						if(!(keyName.equals("mySelector"))){
+						ob.put(keyName, value);
+						}
+						else
+						{
+							lst.add(value.toString());
+						}
+					}
+					System.out.println("Key : "+key + " value :"+ value);
+				}
+				System.out.println("Map object for creating  :"+ ob.toString());
+				System.out.println("List object for creating"+lst.toString());
+			}
+			GamesBookingDAOImpl checkSlot = new GamesBookingDAOImpl();
+			Map resMap = checkSlot.bookSlot(ob, lst);
+			System.out.println("Response to user for booking detail"+Utils.convertMapToJson(resMap));
+			 return Utils.convertMapToJson(resMap);
 		});
 
-		delete("/deleteGamesBooking/:username", (req, res) -> {
+		/*delete("/deleteGamesBooking/:username", (req, res) -> {
 			System.out.println("Request: Delete game booking");
 			String username = req.params(":username");
 			System.out.println("name = " + username);
@@ -242,7 +301,7 @@ public class WebController {
 			}
 			return Utils.convertMapToJson(map);
 		});
-
+*/
 		// ********************************************************
 		// Itinerary specific queries
 		// ********************************************************
