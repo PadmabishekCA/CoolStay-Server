@@ -85,11 +85,11 @@ public class WebController {
 			return Utils.convertMapToJson(map);
 		});
 		
-		get("/confirmUser/:username", (req, res) -> {
-			
-			String username = req.params(":username");
-			String lst = (new UserDAOImpl()).confirmUser(username);
-			int ctr = 1;
+		post("/confirmUser", (req, res) -> {
+			System.out.println("Request for confirming user " + req.body());
+			JSONObject jObject = new JSONObject(req.body());
+			Map ob = Utils.convertJsonRequestToMap(jObject);
+			String lst = (new UserDAOImpl()).confirmUser(ob.get("uname").toString());
 			Map<String, Object> map = new HashMap<String, Object>();	
 				map.put("isLogin",  lst );
 			return Utils.convertMapToJson(map);
@@ -153,25 +153,7 @@ public class WebController {
 			JSONObject jObject = new JSONObject(req.body());
 			JSONArray jarray= jObject.getJSONArray("classroom");
 			System.out.println("Request: Create jarray " + jarray);
-			Map ob = new HashMap();
-			Iterator it =jarray.iterator();
-			while(it.hasNext())	
-			{
-				JSONObject jObjectit = (JSONObject)it.next();
-				Iterator<?> keys = jObjectit.keys();
-				String keyName = null;
-				while (keys.hasNext()) {
-					String key = (String) keys.next();
-					String value = jObjectit.getString(key);
-					if(key.equalsIgnoreCase("name"))
-						keyName = value;
-					else if(key.equalsIgnoreCase("value")) 
-						ob.put(keyName, value);
-					System.out.println("Key : "+key + " value :"+ value);
-				}
-				System.out.println("Map obkect  :"+ ob.toString());
-				
-			}
+			Map ob = Utils.convertJsonRequestToMap(jObject);
 			CuisineOrderDAOImpl order = new CuisineOrderDAOImpl();
 			Map resMap= order.addCuisineOrder(ob);
 			System.out.println("Response of order"+ Utils.convertMapToJson(resMap));
@@ -214,25 +196,7 @@ public class WebController {
 			JSONObject jObject = new JSONObject(req.body());
 			JSONArray jarray= jObject.getJSONArray("classroom");
 			System.out.println("Request: Create jarray " + jarray);
-			Map ob = new HashMap();
-			Iterator it =jarray.iterator();
-			while(it.hasNext())	
-			{
-				JSONObject jObjectit = (JSONObject)it.next();
-				Iterator<?> keys = jObjectit.keys();
-				String keyName = null;
-				while (keys.hasNext()) {
-					String key = (String) keys.next();
-					String value = jObjectit.getString(key);
-					if(key.equalsIgnoreCase("name"))
-						keyName = value;
-					else if(key.equalsIgnoreCase("value")) 
-						ob.put(keyName, value);
-					System.out.println("Key : "+key + " value :"+ value);
-				}
-				System.out.println("Map obkect  :"+ ob.toString());
-				
-			}
+			Map ob = Utils.convertJsonRequestToMap(jObject);
 			GamesBookingDAOImpl checkSlot = new GamesBookingDAOImpl();
 			Map resMap=checkSlot.checkGamesSlot(ob);
 			System.out.println("Result of slotCheck"+ Utils.convertMapToJson(resMap));
