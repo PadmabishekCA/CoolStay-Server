@@ -89,10 +89,8 @@ public class WebController {
 			System.out.println("Request for confirming user " + req.body());
 			JSONObject jObject = new JSONObject(req.body());
 			Map ob = Utils.convertJsonRequestToMap(jObject);
-			String lst = (new UserDAOImpl()).confirmUser(ob.get("uname").toString());
-			Map<String, Object> map = new HashMap<String, Object>();	
-				map.put("isLogin",  lst );
-			return Utils.convertMapToJson(map);
+			Map loginUserInfo = (new UserDAOImpl()).confirmUser(ob.get("uname").toString());
+			return Utils.convertMapToJson(loginUserInfo);
 		});
 		
 		get("/getAllDetails", (req, res) -> {
@@ -105,34 +103,23 @@ public class WebController {
 		// Cuisine specific queries
 		// ********************************************************
 		post("/createCuisine", (req, res) -> {
-			/*System.out.println("Request: Create cuisine " + req.body());
+			System.out.println("Request for creating cuisine " + req.body());
 			JSONObject jObject = new JSONObject(req.body());
-			JSONArray jarray= jObject.getJSONArray("classroom");
-			System.out.println("Request: Create jarray " + jarray);
-			Iterator it =jarray.iterator();
-			while(it.hasNext())
-			{
-				JSONObject jObjectit = (JSONObject)it.next();
-				Iterator<?> keys = jObjectit.keys();
-
-				while (keys.hasNext()) {
-					String key = (String) keys.next();
-					String value = jObjectit.getString(key);
-					//map.put(key, value);
-					System.out.println("Key : "+key + " value :"+ value);
-				}
-				
-			}*/
-			Map map = (new UserDAOImpl()).getAllDetails();
+			Map cuisineDetail = Utils.convertJsonRequestToMap(jObject);
+			int rs = (new CuisineDAOImpl()).addCuisine(cuisineDetail);
+			Map<String, Object> map = new HashMap<String, Object>();	
+			map.put("isCreated",  rs );
 			return Utils.convertMapToJson(map);
 			})	;
 
-		delete("/deleteCuisine/:username", (req, res) -> {
-			System.out.println("Request: Delete cuisine");
-			String username = req.params(":username");
-			System.out.println("name = " + username);
-			(new CuisineDAOImpl()).deleteCuisine(new Cuisine(null, username, null, null, null, null));
-			return "Cuisine deleted";
+		post("/deleteCuisine", (req, res) -> {
+			System.out.println("Request: Delete cuisine"+req.body());
+			JSONObject jObject = new JSONObject(req.body());
+			Map deleteDetail = Utils.convertJsonRequestToMap(jObject);
+			int rs = (new CuisineDAOImpl()).deleteCuisine(deleteDetail);
+			Map<String, Object> map = new HashMap<String, Object>();	
+			map.put("isDeleted",  rs );
+			return Utils.convertMapToJson(map);
 		});
 
 		get("/getCuisines", (req, res) -> {
@@ -165,18 +152,23 @@ public class WebController {
 		// ********************************************************
 		post("/createGames", (req, res) -> {
 			System.out.println("Request: Create games " + req.body());
-			Map<String, Object> map = Utils.convertJsonToMap(req.body());
-			(new GamesDAOImpl()).addGames(new Games(null, map.get("description").toString(),
-					map.get("num_of_players").toString(), map.get("image").toString()));
-			return "Cuisine Created";
+			JSONObject jObject = new JSONObject(req.body());
+			Map createGame = Utils.convertJsonRequestToMap(jObject);
+
+			int result= (new GamesDAOImpl()).addGames(createGame);
+			Map<String, Object> response = new HashMap<String, Object>();	
+			response.put("isCreated",  result );
+			return Utils.convertMapToJson(response);
 		});
 
-		delete("/deleteGames/:username", (req, res) -> {
-			System.out.println("Request: Delete game");
-			String username = req.params(":username");
-			System.out.println("name = " + username);
-			(new GamesDAOImpl()).deleteGames(new Games(null, username, null, null));
-			return "Cuisine deleted";
+		post("/deleteGames", (req, res) -> {
+			System.out.println("Request: Delete game"+req.body());
+			JSONObject jObject = new JSONObject(req.body());
+			Map deleteDetail = Utils.convertJsonRequestToMap(jObject);
+			int rs = (new GamesDAOImpl()).deleteGames(deleteDetail);
+			Map<String, Object> map = new HashMap<String, Object>();	
+			map.put("isDeleted",  rs );
+			return Utils.convertMapToJson(map);
 		});
 
 		get("/getGames", (req, res) -> {

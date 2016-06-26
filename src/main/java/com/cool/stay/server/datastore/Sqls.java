@@ -4,12 +4,13 @@ public final class Sqls {
 	public static final String getUsers = "select *from user_table";
 	public static final String addUser = "insert into user_table values (null, ?, ?, ?)";
 	public static final String deleteUser = "delete from user_table where name = ?";
-	public static final String confirmUser = "select password from user_table where name = ?";
+	public static final String confirmUser = "select password,rolename from user_table where name = ?";
 	
 	
 	public static final String getCuisines = "select *from t_mst_cuisine";
-	public static final String addCuisine = "insert into cuisine values (null, ?, ?, ?, ?, ?)";
-	public static final String deleteCuisine = "delete from cuisine where name = ?";
+	public static final String addCuisine = "insert into t_mst_cuisine(name,description) values (?, ?)";
+	public static final String addCuisineAmount="insert into t_mst_amount(name,amount) values(?,?)";
+	public static final String deleteCuisine = "delete from t_mst_cuisine where id= ?";
 	
 	public static final String addCuisineOrder = "insert into t_dtl_cuisine (cuisineId,quantity,userId,type,amount,paystatus) values (?, ?, ?, ?,?,?)";
 	public static final String getInfoForCuisineOrder="select distinct t1.id as cusine_id,t3.id as user_id,t2.amount from t_mst_cuisine t1,t_mst_amount t2,user_table t3 where t3.name =? and t1.name=? and t2.name =?";
@@ -22,8 +23,8 @@ public final class Sqls {
 	public static final String slotBookingStatusOfUser="select t1.Intreval as intreval, t2.gameName as gamename , t2.slotdate as bookeddate from t_mst_slot t1,t_dtl_slot t2 where t1.id=t2.slotId and t2.userName =?";
 	
 	public static final String getGamess = "select *from t_mst_games";
-	public static final String addGames = "insert into games values (null, ?, ?, ?)";
-	public static final String deleteGames = "delete from games where description = ?";
+	public static final String addGames = "insert into t_mst_games(name,description) values(?, ?)";
+	public static final String deleteGames = "delete from t_mst_games where id = ?";
 	
 	public static final String getGamesBooking = "select *from games_booking";
 	public static final String addGamesBooking = "insert into games_booking values (null, ?, ?, ?, ?, ?, ?, ?)";

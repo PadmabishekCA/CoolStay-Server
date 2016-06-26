@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.cool.stay.server.datastore.ConnectionManager;
 import com.cool.stay.server.datastore.Sqls;
@@ -24,23 +25,31 @@ public class CuisineDAOImpl {
 		return lst;
 	}
 
-	public void addCuisine(Cuisine user) {
+	public int addCuisine(Map cuisineDetail) {
+		Cuisine cuisineInfo = new Cuisine(cuisineDetail);
+		int rs=0,rs2=0;
 		try {
-			conMgr.executeUpdate(Sqls.addCuisine, user.getName(), user.getDescription(), user.getImage(),
-					user.getPriority(), user.getUserId());
+		 rs=conMgr.executeUpdate(Sqls.addCuisine, cuisineInfo);
+		 
+		 rs2=conMgr.executeUpdate(Sqls.addCuisineAmount,cuisineInfo.getName(),cuisineInfo.getAmount());
+		 
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return rs+rs2;
 	}
 
-	public void deleteCuisine(Cuisine user) {
-		System.out.println("user name " + user.getName());
+	public int deleteCuisine(Map deleteDetail) {
+		Cuisine cuisineInfo = new Cuisine(deleteDetail.get("cuisineDeleteId").toString());
+		System.out.println("user name " + cuisineInfo.getId());
+		int rs=0;
 		try {
-			conMgr.executeUpdate(Sqls.deleteCuisine, user.getName());
+			rs=conMgr.executeUpdate(Sqls.deleteCuisine, cuisineInfo.getId());
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return rs;
 	}
 }

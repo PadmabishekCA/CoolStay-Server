@@ -27,16 +27,16 @@ public class UserDAOImpl {
 
 		return lst;
 	}
-	public String confirmUser(String user) throws ClassNotFoundException, SQLException {
+	public Map confirmUser(String user) throws ClassNotFoundException, SQLException {
 		ResultSet rs = conMgr.executeQuery(Sqls.confirmUser,user);
+		Map userDetail= new HashMap();
 		//List<User> lst = new ArrayList<User>();
 		if (rs.next()) {
-			String i = rs.getString(1);
-			System.out.println("Hello"+i);
-			if(i!=null)
-				return i;
+			userDetail.put(rs.getString(1).toString(), rs.getString(2).toString());
+			
 		}
-		return "Invalid";
+		
+		return userDetail;
 	}
 	public void addUser(User user) {
 		try {

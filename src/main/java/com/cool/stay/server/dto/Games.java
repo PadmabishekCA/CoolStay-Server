@@ -1,5 +1,7 @@
 package com.cool.stay.server.dto;
 
+import java.util.Map;
+
 public class Games {
 	private String id;
 	private String description;
@@ -29,6 +31,14 @@ public class Games {
 		this.description=description;
 	}
 	
+	public Games(String id){
+		this.id=id;
+	}
+	
+	public Games(Map createGame){
+		this.names=createGame.get("gameName").toString();
+		this.description=createGame.get("gameDesc").toString();
+	}
 	public String getId() {
 		return id;
 	}

@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.cool.stay.server.dto.Cuisine;
 import com.cool.stay.server.dto.CuisineOrder;
+import com.cool.stay.server.dto.Games;
 import com.cool.stay.server.dto.GamesBooking;
 import com.cool.stay.server.dto.GamesSlotDetail;
 import com.cool.stay.server.dto.OrderDetail;
@@ -86,9 +88,32 @@ public class ConnectionManager {
 		return pstmt.executeUpdate();
 	}
 	
+	public int executeUpdate(String sql, Cuisine cuisineInfo) throws ClassNotFoundException,SQLException{
+		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		pstmt.setString(1, cuisineInfo.getName());
+		pstmt.setString(2, cuisineInfo.getDescription());
+		return pstmt.executeUpdate();
+	}
+	
+	
+	public int executeUpdate(String sql, Games gameInfo) throws ClassNotFoundException,SQLException{
+		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		pstmt.setString(1, gameInfo.getNames());
+		pstmt.setString(2, gameInfo.getDescription());
+		return pstmt.executeUpdate();
+	}
+	
+	public int executeUpdate(String sql, String cuisineName, Double cuisineAmount)throws ClassNotFoundException,SQLException{
+		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		pstmt.setString(1, cuisineName);
+		pstmt.setDouble(2, cuisineAmount);
+		return pstmt.executeUpdate();
+	}
+	
 	
 	
 	public int executeUpdate(String sql, Object... args) throws ClassNotFoundException, SQLException {
+		System.out.println("Here in not need to place");
 		PreparedStatement pstmt = getConnection().prepareStatement(sql);
 		int ctr = 1;
 		for (Object arg : args) {

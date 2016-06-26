@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.cool.stay.server.datastore.ConnectionManager;
 import com.cool.stay.server.datastore.Sqls;
@@ -24,21 +25,27 @@ public class GamesDAOImpl {
 		return lst;
 	}
 
-	public void addGames(Games user) {
+	public int addGames(Map createGame) {
+		Games insertNewGame = new Games(createGame);
+		int rs=0;
 		try {
-			conMgr.executeUpdate(Sqls.addGames, user.getDescription(), user.getNumOfPlayers(), user.getImage());
+			rs=conMgr.executeUpdate(Sqls.addGames,insertNewGame);
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return rs;
 	}
 
-	public void deleteGames(Games user) {
+	public int deleteGames(Map deleteDetail) {
+		Games deleteGame =new Games(deleteDetail.get("gameDeleteId").toString());
+		int rs=0;
 		try {
-			conMgr.executeUpdate(Sqls.deleteGames, user.getDescription());
+			rs =conMgr.executeUpdate(Sqls.deleteGames, deleteGame.getId());
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return rs;
 	}
 }
